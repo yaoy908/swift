@@ -1,0 +1,22 @@
+// RUN: %target-run-simple-swiftgyb
+// REQUIRES: executable_test
+// REQUIRES: objc_interop
+
+import Foundation
+import StdlibUnittest
+
+let NSStringTests = TestSuite("NSString")
+
+NSStringTests.test("String.init(_: NSString)") {
+}
+
+NSStringTests.test("NSString bridges to String with custom AnyHashable")
+  .forEach(in: [""]) {
+  input in
+  let s = input._bridgeToObjectiveC()
+  expectNotEmpty(s._toCustomAnyHashable())
+  expectEqual("${Self}", String(AnyHashable(s).base.dynamicType))
+}
+
+runAllTests()
+
